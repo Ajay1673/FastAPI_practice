@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Home</h1>
+    <form action="/post_form" method="post">
+        <p>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name">
+        </p>
+        <p>
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email">
+        </p>
+        <p>
+            <label for="age">Age</label>
+            <input type="text" name="age" id="age">
+        </p>
+        <p>
+            <label for="gender">Gender</label>
+            <input type="radio" name="gender" id="gender" value="male">
+            <label>Male</label>
+            <input type="radio" name="gender" id="gender" value="female">
+            <label>Female</label>
+        </p>
+        <p>
+            <label for="dob">D.O.B</label>
+            <input type="text" name="dob" id="dob">
+        </p>
+        <p>
+            <button type="submit">
+                SAVE
+            </button>
+            <button type="reset">
+                CANCEL
+            </button>
+        </p>
+    </form>
+{% endblock %}
