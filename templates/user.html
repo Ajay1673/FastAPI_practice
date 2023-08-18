@@ -4,7 +4,7 @@
     <h1>Welcome</h1>
     <p>
         <label>Select Name</label>
-            <select onclick="display()" class="username">
+            <select onchange="showDetails(this.value)" class="username">
                 <option selected disabled>Select</option>
                 {% for i in users %}
                     <option value="{{i['name']}}">{{i["name"]}}</option>
@@ -12,14 +12,31 @@
             </select>
     </p>
     <button type="button"><a style="text-decoration: none; color: black;" href="{{url_for('home')}}">Add New</a></button>
-    <p>
-    </p>
+    <div class="userDetails"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        async function display(){
-            const response = await fetch("127.0.0.1:8000/users_api")
-            const result = await response.json()
-            console.log(result);
-            const user = document.querySelector('.username').value
+        function showDetails(data) {
+            
+            var id = data;
+    
+            $.ajax( {
+                type : "put",
+                url : '/put_data/'+id,
+                id : id,
+                contentType : "application/json",
+                success: function(body) {
+                    var x = document.querySelector(".userDetails");
+                    var y = `<p>Name: ${body.name}</p>
+                            <p>Email: ${body.email}</p>
+                            <p>Age: ${body.age}</p> 
+                            <p>Gender: ${body.gender}</p>
+                            <p>D.O.B: ${body.dob}</p>`
+                    x.innerHTML = y;
+                },
+            });
+            return false;
         }
+
     </script>
+   
 {% endblock %}

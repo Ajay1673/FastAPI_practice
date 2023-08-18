@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from database import session
 from fastapi.responses import RedirectResponse,JSONResponse
 from sqlalchemy.orm import Session
+from fastapi.encoders import jsonable_encoder
 import models
 
 app = FastAPI()
@@ -40,14 +41,15 @@ def postdata(request:Request, db:Session=Depends(get_db), name:str=Form(...), em
     else:
         return {"message":"user already exist"}
     
-@app.get("/users_api")
-def userapi(request:Request,db:Session=Depends(get_db)):
-    users_data = db.query(models.User).filter(models.User.name!="NULL").all()
-    userList = []
-    for i in users_data:
-        userList.append({"name":i.name,"email":i.email,"age":i.age,"gender":i.gender,"dob":i.dob})
-    print(userList)
-    return JSONResponse(userList)
+# @app.get("/users_api")
+# def userapi(request:Request,db:Session=Depends(get_db)):
+#     users_data = db.query(models.User).filter(models.User.name!="NULL").all()
+#     userList = []
+#     for i in users_data:
+#         userList.append({"name":i.name,"email":i.email,"age":i.age,"gender":i.gender,"dob":i.dob})
+#     print(userList)
+#     json_response = jsonable_encoder(userList)
+#     return JSONResponse(json_response)
 
 
 @app.get('/get_users')
@@ -55,6 +57,12 @@ def users(request:Request,db:Session=Depends(get_db)):
     users_data = db.query(models.User).filter(models.User.name!="NULL").all()
     print(users_data)
     return templates.TemplateResponse('user.html',context={'request':request,'users':users_data})
+
+@app.put("/put_data/{user}")
+def get_form(user:str,request:Request,db:Session = Depends(get_db)):
+    body=db.query(models.User).filter(models.User.name==user).first()
+    json_compatible_item_data = jsonable_encoder(body)
+    return JSONResponse(content=json_compatible_item_data)
 
 
 
